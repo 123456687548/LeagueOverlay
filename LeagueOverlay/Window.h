@@ -2,6 +2,9 @@
 #include <Windows.h>
 #include <dwmapi.h>
 
+#define MY_TRAY_ICON_ID 1337
+#define MY_TRAY_ICON_MESSAGE 1108
+
 struct target_t
 {
 	char m_name[256];
@@ -12,6 +15,7 @@ struct target_t
 	HANDLE m_pHandle;
 	DWORD m_pid;
 	DWORD m_module;
+	bool m_active;
 };
 
 class Window {
@@ -25,17 +29,28 @@ private:
 	MARGINS m_margin;
 	int m_nCmdShow;
 	target_t m_targetWindow;
+	bool m_visible;
+	bool m_running;
+	NOTIFYICONDATA m_trayIconData;
 public:
 	MSG m_message;
 private:
 	void createClass(WNDPROC winproc, const char* windowname);
 	void createWindowOverlay();
+	void cleanUp();
 public:
 	Window(HINSTANCE hInstance, int nCmdShow);
+	~Window();
 	void findTargetWindow();
 	int getWidth() { return m_width; }
 	int getHeight() { return m_height; }
 	target_t getTargetWindow() { return m_targetWindow; }
 	HWND getHWND() { return m_hwnd; }
+	bool isRunning() { return m_running; }
+	HINSTANCE getHInstance() { return m_hInstance; }
+	void stop() { m_running = false; }
+	void hideWindow();
+	void showWindow();
+	void addTrayIcon();
 };
 
