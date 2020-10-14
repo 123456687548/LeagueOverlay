@@ -26,16 +26,14 @@ bool bMenuEnabled = true;
 bool bMenuItems[MENUITEMS];
 int iSelectedItem = 0;
 
-void DrawString(char* String, int x, int y, int a, int r, int g, int b, ID3DXFont* font)
-{
+void DrawString(char* String, int x, int y, int a, int r, int g, int b, ID3DXFont* font) {
 	RECT FontPos;
 	FontPos.left = x;
 	FontPos.top = y;
 	font->DrawTextA(0, String, strlen(String), &FontPos, DT_NOCLIP, D3DCOLOR_ARGB(a, r, g, b));
 }
 
-void DirectxFunctions::DirectXInit(HWND hwnd)
-{
+void DirectxFunctions::DirectXInit(HWND hwnd) {
 	if (FAILED(Direct3DCreate9Ex(D3D_SDK_VERSION, &DirectX.Object)))
 		exit(1);
 
@@ -48,7 +46,7 @@ void DirectxFunctions::DirectXInit(HWND hwnd)
 	DirectX.Param.AutoDepthStencilFormat = D3DFMT_D16;
 	DirectX.Param.MultiSampleQuality = D3DMULTISAMPLE_NONE;
 	DirectX.Param.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	
+
 
 	if (FAILED(DirectX.Object->CreateDeviceEx(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &DirectX.Param, 0, &DirectX.Device)))
 		exit(1);
@@ -62,38 +60,28 @@ void DirectxFunctions::DirectXInit(HWND hwnd)
 }
 
 
-void DirectxFunctions::RenderDirectX()
-{
+void DirectxFunctions::RenderDirectX() {
 	DirectX.Device->BeginScene();
 	//if (GetForegroundWindow() == window->getTargetWindow().m_hwnd)
 	{
-		for (int i = 0; i < 255; i++)
-		{
-			if (GetAsyncKeyState(i) != 0)
-			{
-				if (bKeyPrev[i] == false)
-				{
+		for (int i = 0; i < 255; i++) {
+			if (GetAsyncKeyState(i) != 0) {
+				if (bKeyPrev[i] == false) {
 					bKeyPrev[i] = true;
 					bKeys[i] = true;
-				}
-				else
-				{
+				} else {
 					bKeys[i] = false;
 				}
-			}
-			else
-			{
+			} else {
 				bKeys[i] = false;
 				bKeyPrev[i] = false;
 			}
 		}
-		if (bKeys[VK_INSERT])
-		{
+		if (bKeys[VK_INSERT]) {
 			bMenuEnabled = !bMenuEnabled;
 		}
 
-		if (bMenuEnabled)
-		{
+		if (bMenuEnabled) {
 			//EXAMPLES to draw boxes or rectangles!
 			//DrawRect(p_Device, 20, 20, 200, 200, D3DCOLOR_ARGB(186, 206, 168, 168));
 			//DrawBorderBox(10, 10, 200, 200, 1, 255, 9, 255, 0);
@@ -115,7 +103,7 @@ void DirectxFunctions::RenderDirectX()
 			//DirectX.Font->DrawTextW(NULL, L"Skyrim Tutorial", -1, &pos, 0, D3DCOLOR_ARGB(255, 5, 5, 5));
 			pos.top += 20;
 
-			
+
 			HDC hScreenDC = CreateDCA("DISPLAY", NULL, NULL, NULL);
 			// and a device context to put it in
 			HDC hMemoryDC = CreateCompatibleDC(hScreenDC);
@@ -137,7 +125,7 @@ void DirectxFunctions::RenderDirectX()
 			// clean up
 			DeleteDC(hMemoryDC);
 			DeleteDC(hScreenDC);
-			
+
 			//D3DXCreateTexture(DirectX.Device, 400,400,0, D3DUSAGE_RENDERTARGET, D3DFMT_A8B8G8R8, )
 			if (FAILED(D3DXCreateTextureFromFileInMemory(DirectX.Device, hBitmap, sizeof(hBitmap), DirectX.Texture))) {
 				Sleep(1);
@@ -155,7 +143,7 @@ void DirectxFunctions::RenderDirectX()
 			DirectX.Sprite->Begin(D3DXSPRITE_ALPHABLEND); //begin our sprite with alphablend so it support alpha, like png use alpha
 			DirectX.Sprite->Draw(*DirectX.Texture, NULL, NULL, &imagepos, 0xFFFFFFFF); //Draw the sprite, first parameter is the image texture, 4th parameter is the position, last parameter is the color change leave to 0xFFFFFFFF for no change
 			DirectX.Sprite->End(); //end the sprite
-			
+
 		}
 	}
 	DirectX.Device->EndScene();

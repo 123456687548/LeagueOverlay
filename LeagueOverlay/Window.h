@@ -5,8 +5,9 @@
 #define MY_TRAY_ICON_ID 1337
 #define MY_TRAY_ICON_MESSAGE 1108
 
-struct target_t
-{
+class ScreenCapture;
+
+struct target_t {
 	char m_name[256];
 	HWND m_hwnd;
 	RECT m_size;
@@ -24,14 +25,14 @@ private:
 	HINSTANCE m_hInstance;
 	HWND m_hwnd;
 	WNDCLASSEX m_windowClass;
-	int m_width = 255;
-	int m_height = 255;
+	int m_width = 253;
+	int m_height = 253;
 	MARGINS m_margin;
-	int m_nCmdShow;
 	target_t m_targetWindow;
 	bool m_visible;
 	bool m_running;
 	NOTIFYICONDATA m_trayIconData;
+	ScreenCapture* screenCapture;
 public:
 	MSG m_message;
 private:
@@ -39,7 +40,8 @@ private:
 	void createWindowOverlay();
 	void cleanUp();
 public:
-	Window(HINSTANCE hInstance, int nCmdShow);
+	Window(HINSTANCE hInstance);
+	Window(HINSTANCE hInstance, int width, int height);
 	~Window();
 	void findTargetWindow();
 	int getWidth() { return m_width; }
@@ -52,5 +54,7 @@ public:
 	void hideWindow();
 	void showWindow();
 	void addTrayIcon();
+	void initScreenCapture();
+	bool drawScreenCapture();
 };
 
