@@ -155,15 +155,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DirectX.cpp" />
-    <ClCompile Include="Drawing.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ScreenCapture.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectX.h" />
-    <ClInclude Include="Drawing.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScreenCapture.h" />
     <ClInclude Include="Window.h" />

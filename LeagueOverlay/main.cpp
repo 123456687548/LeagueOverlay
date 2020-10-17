@@ -2,7 +2,6 @@
 #include <chrono>
 #include <thread>
 #include "Window.h"
-#include "DirectX.h"
 
 Window* window;
 
@@ -12,13 +11,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	FILE* f;
 	freopen_s(&f, "CONOUT$", "w", stdout);
 #endif
-	window = new Window(hInstance, 253, 253);
+	window = new Window(hInstance, "Main window", 253, 253);
 	window->initScreenCapture();
 	//DirectxFunctions::DirectXInit(window->getHWND());
 	window->addTrayIcon();
 	MoveWindow(window->getHWND(), 127, 109, window->getWidth(), window->getHeight(), true);
 	while (window->isRunning()) {
-
 		if (PeekMessage(&window->m_message, window->getHWND(), 0, 0, PM_REMOVE)) {
 			DispatchMessage(&window->m_message);
 			TranslateMessage(&window->m_message);

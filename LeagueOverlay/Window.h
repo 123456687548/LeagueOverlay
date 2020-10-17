@@ -38,10 +38,11 @@ public:
 private:
 	void createClass(WNDPROC winproc, const char* windowname);
 	void createWindowOverlay();
+	HWND getForegroundWindow();
 	void cleanUp();
 public:
-	Window(HINSTANCE hInstance);
-	Window(HINSTANCE hInstance, int width, int height);
+	Window(HINSTANCE hInstance, const char* name);
+	Window(HINSTANCE hInstance, const char* name, int width, int height);
 	~Window();
 	void findTargetWindow();
 	int getWidth() { return m_width; }
