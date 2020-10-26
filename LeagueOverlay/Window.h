@@ -33,8 +33,13 @@ private:
 	bool m_running;
 	NOTIFYICONDATA m_trayIconData;
 	ScreenCapture* screenCapture;
+
+	HBRUSH brush;
+	RECT cover{ 0,0,26,17 };
+	RECT cover2{ 0,0,13,25 };
 public:
 	MSG m_message;
+	bool m_transparent = false;
 private:
 	void createClass(WNDPROC winproc, const char* windowname);
 	void createWindowOverlay();
@@ -51,11 +56,15 @@ public:
 	HWND getHWND() { return m_hwnd; }
 	bool isRunning() { return m_running; }
 	HINSTANCE getHInstance() { return m_hInstance; }
+	ScreenCapture* getScreenCapture() { return screenCapture; }
 	void stop() { m_running = false; }
 	void hideWindow();
 	void showWindow();
 	void addTrayIcon();
 	void initScreenCapture();
 	bool drawScreenCapture();
+	void setTransparent(int transparency = 75);
+	void removeColor(COLORREF colorKey = RGB(0,0,0));
+	void coverEdge();
 };
 

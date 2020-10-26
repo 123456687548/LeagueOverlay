@@ -2,11 +2,18 @@
 #include <chrono>
 #include <thread>
 #include "Window.h"
+#include "ScreenCapture.h"
 
 Window* window;
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
 #ifdef _DEBUG
+#define SHOW_CONSOLE
+#endif
+
+#undef SHOW_CONSOLE
+
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
+#ifdef SHOW_CONSOLE
 	AllocConsole();
 	FILE* f;
 	freopen_s(&f, "CONOUT$", "w", stdout);
@@ -31,11 +38,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		if (GetAsyncKeyState(VK_DELETE)) {
 			window->stop();
 		}
+		if (GetAsyncKeyState(VK_INSERT) & 1) {
+			if (window->m_transparent) {
+				window->removeColor();
+			} else {
+				window->setTransparent();
+			}
+		}
 
 		window->findTargetWindow();
-		if (window->getHWND() && window->getTargetWindow().m_hwnd && window->getTargetWindow().m_active) {
+		if (window->getHWND() && window->getTargetWindow().m_active) {
 			window->showWindow();
 			window->drawScreenCapture();
+			window->coverEdge();
 		} else {
 			window->hideWindow();
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -43,7 +58,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	}
 
 	delete window;
-#ifdef _DEBUG
+#ifdef SHOW_CONSOLE
 	system("pause");
 	fclose(f);
 	FreeConsole();

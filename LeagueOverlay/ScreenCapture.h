@@ -7,12 +7,11 @@ class ScreenCapture {
 private:
 	Window* window;
 	HDC hdcSource;
-	HDC hdcWindow;
 
 	HWND hwndSource;
 
 public:
-
+	HDC hdcWindow;
 private:
 
 public:

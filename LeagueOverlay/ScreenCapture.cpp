@@ -3,6 +3,8 @@
 
 #include <cstdio>
 
+#pragma comment(lib, "Msimg32.lib")
+
 ScreenCapture::ScreenCapture(Window* window, HWND source) : window(window), hwndSource(source) {
 	hdcSource = GetDC(source);
 	hdcWindow = GetDC(window->getHWND());
@@ -18,6 +20,5 @@ bool ScreenCapture::drawScreencapture() {
 		printf("BitBlt has failed %#X", GetLastError());
 		return false;
 	}
-
 	return true;
 }

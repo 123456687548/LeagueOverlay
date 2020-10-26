@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LeagueOverlay", "LeagueOver
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug show allways|x64 = Debug show allways|x64
+		Debug show allways|x86 = Debug show allways|x86
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E887C27-7AEE-48FA-B532-B5BA848C8D67}.Debug show allways|x64.ActiveCfg = Debug show allways|x64
+		{9E887C27-7AEE-48FA-B532-B5BA848C8D67}.Debug show allways|x64.Build.0 = Debug show allways|x64
+		{9E887C27-7AEE-48FA-B532-B5BA848C8D67}.Debug show allways|x86.ActiveCfg = Debug show allways|Win32
+		{9E887C27-7AEE-48FA-B532-B5BA848C8D67}.Debug show allways|x86.Build.0 = Debug show allways|Win32
 		{9E887C27-7AEE-48FA-B532-B5BA848C8D67}.Debug|x64.ActiveCfg = Debug|x64
 		{9E887C27-7AEE-48FA-B532-B5BA848C8D67}.Debug|x64.Build.0 = Debug|x64
 		{9E887C27-7AEE-48FA-B532-B5BA848C8D67}.Debug|x86.ActiveCfg = Debug|Win32

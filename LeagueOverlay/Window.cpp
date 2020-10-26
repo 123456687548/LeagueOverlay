@@ -9,13 +9,16 @@
 
 extern Window* window;
 
+
 LRESULT CALLBACK WinProcedure(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch (Message) {
 		case WM_PAINT:
 			//DirectxFunctions::RenderDirectX();
-
 			break;
 		case WM_DESTROY:
+			break;
+		case WM_QUIT:
+			window->stop();
 			break;
 		case MY_TRAY_ICON_MESSAGE:
 			switch (lParam) {
@@ -35,18 +38,21 @@ Window::Window(HINSTANCE hInstance, const char* name) : m_hInstance(hInstance), 
 	findTargetWindow();
 	createClass(WinProcedure, name);
 	createWindowOverlay();
+
+	brush = CreateSolidBrush(RGB(0, 0, 0));
 }
 
 Window::Window(HINSTANCE hInstance, const char* name, int width, int height) :m_hInstance(hInstance), m_running(true), m_width(width), m_height(height) {
 	findTargetWindow();
 	createClass(WinProcedure, name);
 	createWindowOverlay();
+
+	brush = CreateSolidBrush(RGB(0, 0, 0));
 }
 
 Window::~Window() {
 	printf("destroying window %s\n", m_name);
 	cleanUp();
-	m_running = false;
 }
 
 void Window::createClass(WNDPROC winproc, const char* windowname) {
@@ -75,7 +81,6 @@ void Window::findTargetWindow() {
 		//GetWindowThreadProcessId(m_targetWindow.m_hwnd, &m_targetWindow.m_pid);
 		//m_targetWindow.m_pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, m_targetWindow.m_pid);		
 		m_targetWindow.m_active = m_targetWindow.m_hwnd == getForegroundWindow();
-		//m_targetWindow.m_active = true;
 		m_targetWindow.m_checked = true;
 		GetWindowRect(m_targetWindow.m_hwnd, &m_targetWindow.m_size);
 		//m_width = m_targetWindow.m_size.right - m_targetWindow.m_size.left;
@@ -89,7 +94,12 @@ void Window::findTargetWindow() {
 
 		//MoveWindow(m_hwnd, m_targetWindow.m_size.left, m_targetWindow.m_size.top, m_width, m_height, true);
 		m_margin = { 0, 0, m_width, m_height };
+	} else {
+		m_targetWindow.m_active = false;
 	}
+#ifdef DEBUG_SHOW_ALLWAYS
+	m_targetWindow.m_active = true;
+#endif
 }
 
 void Window::hideWindow() {
@@ -105,7 +115,7 @@ void Window::showWindow() {
 }
 
 void Window::createWindowOverlay() {
-	m_hwnd = CreateWindowEx(WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TRANSPARENT, m_name, m_name, WS_POPUP, 1, 1, m_width, m_height, 0, 0, m_hInstance, 0);
+	m_hwnd = CreateWindowEx(WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TRANSPARENT, m_name, m_name, WS_POPUP, 0, 0, m_width, m_height, 0, 0, m_hInstance, 0);
 	SetLayeredWindowAttributes(m_hwnd, RGB(0, 0, 0), 255, LWA_COLORKEY | LWA_ALPHA);
 	DwmExtendFrameIntoClientArea(m_hwnd, &m_margin);
 }
@@ -147,11 +157,30 @@ void Window::initScreenCapture() {
 	screenCapture = new ScreenCapture(this, NULL);
 }
 
-bool Window::drawScreenCapture() { return screenCapture->drawScreencapture(); };
+bool Window::drawScreenCapture() { return screenCapture->drawScreencapture(); }
+
+void Window::setTransparent(int transparency) {
+	if (!m_transparent) {
+		m_transparent = SetLayeredWindowAttributes(window->getHWND(), 0, (255 * transparency) / 100, LWA_ALPHA);
+	}
+}
+
+void Window::removeColor(COLORREF colorKey) {
+	if (m_transparent) {
+		m_transparent = !SetLayeredWindowAttributes(window->getHWND(), colorKey, 255, LWA_COLORKEY | LWA_ALPHA);
+	}
+}
+
+void Window::coverEdge() {
+	if (m_transparent) return;
+	FillRect(window->getScreenCapture()->hdcWindow, &cover, brush);
+	FillRect(window->getScreenCapture()->hdcWindow, &cover2, brush);
+}
 
 void Window::cleanUp() {
 	delete screenCapture;
 	Shell_NotifyIcon(NIM_DELETE, &m_trayIconData);
+	DeleteObject(brush);
 	printf("Cleanup Window\n");
 	int result = DestroyWindow(m_hwnd);
 	printf("DestroyWindow: %d\n", result);
