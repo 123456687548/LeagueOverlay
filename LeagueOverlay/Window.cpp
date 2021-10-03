@@ -62,8 +62,8 @@ void Window::createClass(WNDPROC winproc, const char* windowname) {
 	m_windowClass.cbWndExtra = 0;
 	m_windowClass.hbrBackground = (HBRUSH)CreateSolidBrush(RGB(0, 0, 0));
 	m_windowClass.hCursor = LoadCursor(0, IDC_ARROW);
-	m_windowClass.hIcon = LoadIcon(0, IDI_APPLICATION);
-	m_windowClass.hIconSm = LoadIcon(0, IDI_APPLICATION);
+	m_windowClass.hIcon = LoadIcon(m_hInstance, MAKEINTRESOURCE(IDI_ICON1));
+	m_windowClass.hIconSm = LoadIcon(m_hInstance, MAKEINTRESOURCE(IDI_ICON1));
 	m_windowClass.hInstance = m_hInstance;
 	m_windowClass.lpfnWndProc = winproc;
 	m_windowClass.lpszClassName = m_name;
